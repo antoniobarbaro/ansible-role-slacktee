@@ -1,0 +1,12 @@
+---
+# defaults file for slacktee
+#
+slacktee_webhook_url: ''
+slacktee_upload_token: ''
+slacktee_channel: 'general'
+slacktee_tmp_dir: '/tmp'
+slacktee_username: 'slacktee'
+slacktee_icon: 'ghost'
+slacktee_attachment: ''
+slacktee_test_message_enabled: yes
+slacktee_test_message: 'Ansible Slacktee installed!'

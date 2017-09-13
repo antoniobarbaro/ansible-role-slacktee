@@ -1,0 +1,46 @@
+---
+# tasks file for slacktee
+- name: Install slacktee requirements
+  yum: state=latest name={{ item }}
+  with_items:
+    - curl
+
+- name: Download atomic repository
+  get_url: 
+    url: http://www.atomicorp.com/installers/atomic 
+    mode: u+rwx
+    dest: /tmp/atomic-repo-installer.sh
+
+- name: Install atomic repository
+  command: /tmp/atomic-repo-installer.sh
+  environment:
+    NON_INT: 1
+  register: command_result
+  failed_when: "'Error' in command_result.stderr"
+# da verificare l'effettivo messaggio di errore quando fallisce
+# il comando manuale: wget -q -O - http://www.atomicorp.com/installers/atomic | sh
+# impostando export NON_INT=1 non vengono fatte le domande
+
+- name: Install slacktee
+  yum: name={{ item }}
+       state=latest
+  with_items:
+    - slacktee
+
+- name: Set slacktee default parameters
+  lineinfile:
+    path: /etc/slacktee.conf
+    regexp: '^{{ item.property }}='
+    line: '{{ item.property }}={{ item.value }}'
+  with_items:
+    - { property: 'webhook_url', value: '"{{ slacktee_webhook_url }}"' }
+    - { property: 'upload_token', value: '"{{ slacktee_upload_token }}"' }
+    - { property: 'channel', value: '"{{ slacktee_channel }}"' }
+    - { property: 'tmp_dir', value: '"{{ slacktee_tmp_dir }}"' }
+    - { property: 'username', value: '"{{ slacktee_username }}"' }            
+    - { property: 'icon', value: '"{{ slacktee_icon }}"' }            
+    - { property: 'attachment', value: '"{{ slacktee_attachment }}"' }     
+
+- name: send test message to slack
+  shell: echo "{{ slacktee_test_message }}" | slacktee.sh
+  when: slacktee_test_message_enabled                   
