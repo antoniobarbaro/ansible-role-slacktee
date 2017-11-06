@@ -21,11 +21,23 @@
 # il comando manuale: wget -q -O - http://www.atomicorp.com/installers/atomic | sh
 # impostando export NON_INT=1 non vengono fatte le domande
 
-- name: Install slacktee
-  yum: name={{ item }}
-       state=latest
-  with_items:
-    - slacktee
+#- name: Install slacktee
+#  yum: name={{ item }}
+#       state=latest
+#  with_items:
+#    - slacktee
+
+
+- name: copy file slacktee
+  copy:
+    src: files/slacktee-1.2.11-1.el7.art.x86_64.rpm
+    dest: /tmp/slacktee-1.2.11-1.el7.art.x86_64.rpm
+
+- name: install slacktee
+  yum:
+    name: /tmp/slacktee-1.2.11-1.el7.art.x86_64.rpm
+    state: present
+
 
 - name: Set slacktee default parameters
   lineinfile:
