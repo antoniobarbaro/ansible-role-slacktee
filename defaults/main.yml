@@ -10,3 +10,4 @@ slacktee_icon: 'ghost'
 slacktee_attachment: ''
 slacktee_test_message_enabled: yes
 slacktee_test_message: 'Ansible Slacktee installed!'
+slacktee_install_atomic_repo: 'false'
